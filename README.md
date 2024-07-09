@@ -1,3 +1,4 @@
-This is a test
-will this update?
-# test1
+Welcome to my repository
+Assignments are all in the Homework folder and organized by number
+
+Thanks for joining me on this journey!

@@ -1,0 +1,94 @@
+Sub Module2()
+
+'WorkSheet Loop
+
+Dim ws As Worksheet
+For Each ws In ThisWorkbook.Worksheets
+    ws.Select
+
+'Variable Defining
+
+    Dim ticker As String
+    Dim i As Long
+    Dim y As Integer
+    Dim volume As LongLong
+    Dim pp As Double
+    Dim cp As Double
+    Dim m As Double
+
+    y = 2
+    volume = 0
+    pp = Cells(2, 3).Value
+
+
+        'Ticker + Volume Calculation
+
+        For i = 2 To 93003
+        volume = volume + Cells(i, 7).Value
+        If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+        ticker = Cells(i, 1).Value
+        Cells(y, 9).Value = ticker
+    
+        'Quarter Change + Formatting
+    
+            cp = Cells(i, 6).Value
+            pp = Cells(i - 61, 3).Value
+            Cells(y, 10).Value = cp - pp
+            Cells(y, 11).Value = ((cp - pp) / pp)
+            Cells(y, 11).NumberFormat = "0.00%"
+            If Cells(y, 10).Value > 0 Then
+            Cells(y, 10).Interior.ColorIndex = "4"
+            ElseIf Cells(y, 10) < 0 Then
+            Cells(y, 10).Interior.ColorIndex = "3"
+            Else: Cells(y, 10).Interior.ColorIndex = "2"
+        End If
+    
+  'Misc
+    
+    Cells(y, 12).Value = volume
+    y = y + 1
+    volume = 0
+    End If
+
+  Next i
+  
+'Data Analyzing
+  
+rng1 = (Columns("K"))
+rng2 = (Columns("L"))
+Cells(2, 18).Value = WorksheetFunction.max(rng1)
+Cells(3, 18).Value = WorksheetFunction.Min(rng1)
+Cells(4, 18).Value = WorksheetFunction.max(rng2)
+
+max = Cells(2, 18).Value
+Min = Cells(3, 18).Value
+high = Cells(4, 18).Value
+
+For i = 2 To 1501
+    If Cells(i, 11).Value = max Then
+    Cells(2, 17).Value = Cells(i, 9).Value
+    ElseIf Cells(i, 11).Value = Min Then
+    Cells(3, 17).Value = Cells(i, 9).Value
+    ElseIf Cells(i, 12).Value = high Then
+    Cells(4, 17).Value = Cells(i, 9).Value
+    End If
+    
+Next i
+
+'Formatting
+
+Cells(1, 9).Value = "Ticker"
+Cells(1, 10).Value = "Quarterly Change"
+Cells(1, 11).Value = "Percent Change"
+Cells(1, 12).Value = "Total Stock Volume"
+Columns("J:P").AutoFit
+Cells(2, 16).Value = "Greatest % Increase"
+Cells(3, 16).Value = "Greatest % Decrease"
+Cells(4, 16).Value = "Greatest Total Volume"
+Cells(2, 18).NumberFormat = "0.00%"
+Cells(3, 18).NumberFormat = "0.00%"
+
+ws.Activate
+Next ws
+
+End Sub
